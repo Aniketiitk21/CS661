@@ -12,6 +12,7 @@ import { drawTeamStats } from "./team_stats.js";
 import { drawTeamComparison } from "./teamComparison.js";
 import { drawTeamVsTeam } from "./teamVsTeam.js";
 import { drawWordCloud } from "./wordcloud.js";
+import { drawWinPrediction } from "./win_prediction.js";
 
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -29,4 +30,5 @@ document.addEventListener("DOMContentLoaded", () => {
   drawTeamVsTeam("#chart-team-vs-team");
   drawIndividualModule();
   drawWordCloud("#chart-wordcloud-mvp");
+  drawWinPrediction("#chart-win-prediction");
 });
