@@ -22,6 +22,10 @@ register_team_routes(app, matches, deliveries)
 from individual import register_individual_routes
 register_individual_routes(app, matches, deliveries)
 
+from win_prediction import register_routes as register_win_prediction
+register_win_prediction(app, deliveries, matches)
+
+
 from team_stats import register_team_stats_routes
 register_team_stats_routes(app, matches)
 
