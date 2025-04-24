@@ -30,6 +30,9 @@ register_team_stats_routes(app, matches, deliveries)
 from wordcloud import register_wordcloud_routes
 register_wordcloud_routes(app, matches, deliveries)
 
+from season_stats import register_routes as register_season_stats
+register_season_stats(app, matches, deliveries)
+
 # 4) Page routes—serve Jinja templates out of `templates/`
 @app.route("/")
 def home():
