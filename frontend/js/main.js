@@ -31,10 +31,49 @@ const runners = [
   { sel: "#chart-win-prediction",   fn: drawWinPrediction }
 ];
 
-document.addEventListener("DOMContentLoaded", () => {
+// these are the six “overall IPL stats” charts on ipldata.html
+const ipldataSelectors = new Set([
+  "#chart-top-batsmen",
+  "#chart-top-bowlers",
+  "#chart-top-fielders",
+  "#chart-team-wins",
+  "#chart-wordcloud-mvp",
+  "#chart-team-winners-pie"
+]);
+
+function drawAllPresentCharts() {
   for (const {sel, fn} of runners) {
     if (document.querySelector(sel)) {
-      fn(sel);
+      try {
+        fn(sel);
+      } catch (e) {
+        console.error(`Error drawing ${sel}`, e);
+      }
     }
+  }
+}
+
+function drawIPLOverallCharts() {
+  for (const {sel, fn} of runners) {
+    if (ipldataSelectors.has(sel) && document.querySelector(sel)) {
+      try {
+        fn(sel);
+      } catch (e) {
+        console.error(`Error re-drawing ${sel}`, e);
+      }
+    }
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  // initial draw everywhere
+  drawAllPresentCharts();
+
+  // if we’re on ipldata.html, wire up the “Apply” button
+  const applyBtn = document.getElementById("global-apply-btn");
+  if (applyBtn) {
+    applyBtn.addEventListener("click", () => {
+      drawIPLOverallCharts();
+    });
   }
 });
