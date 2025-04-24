@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}IPL Dashboard{% endblock %}</title>
+
+  <!-- global stylesheet -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+
+  <!-- D3 and plugins -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-cloud/1.2.5/d3.layout.cloud.min.js"></script>
+</head>
+<body>
+  <!-- top header bar -->
+  <header class="site-header">
+    <h1>{% block page_title %}IPL Dashboard{% endblock %}</h1>
+  </header>
+
+  <!-- persistent sidebar -->
+  <aside class="site-sidebar">
+    <nav>
+      <ul>
+        <li><a href="{{ url_for('home') }}">Home</a></li>
+        <li><a href="{{ url_for('ipldata') }}">IPL Stats</a></li>
+        <li><a href="{{ url_for('teamstats') }}">Team Stats</a></li>
+        <li><a href="{{ url_for('playerstats') }}">Player Stats</a></li>
+        <li><a href="{{ url_for('seasonstats') }}">Season Stats</a></li>
+        <li><a href="{{ url_for('contests') }}">Contests</a></li>
+        <li><a href="{{ url_for('winprediction') }}">Win Prediction</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- main content area -->
+  <main class="site-content">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- application JavaScript -->
+  <script type="module" src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

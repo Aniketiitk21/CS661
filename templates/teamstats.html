@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Team Stats{% endblock %}
+{% block page_title %}Team Stats{% endblock %}
+
+{% block content %}
+  <!-- page-specific CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/team_stats.css') }}" />
+
+  <div class="dashboard">
+    <div id="chart-team-stats" class="dashboard-item"></div>
+  </div>
+
+  <!-- page-specific JS -->
+  <script type="module" src="{{ url_for('static', filename='js/team_stats.js') }}"></script>
+{% endblock %}

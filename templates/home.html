@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Home – IPL Dashboard{% endblock %}
+{% block page_title %}Welcome to the IPL Dashboard{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+{% endblock %}
+
+{% block content %}
+  <section class="home-hero">
+    <div class="home-hero__overlay">
+      <h2>Welcome to the IPL Analytics Dashboard</h2>
+      <p>
+        Dive into the world’s premier T20 league—track the all-time greats,
+        discover emerging stars, compare head-to-head battles, explore season
+        tables and even test our win-prediction engine. All your IPL insights
+        in one place, powered by interactive D3 visualisations.
+      </p>
+    </div>
+  </section>
+  <section class="home-intro">
+    <img src="{{ url_for('static', filename='images/ipl_banner.jpg') }}"
+         alt="IPL Stadium" class="home-intro__image" />
+  </section>
+{% endblock %}

@@ -1,0 +1,194 @@
+/*-----------------------------------
+  Controls row (unchanged)
+-----------------------------------*/
+.team-stats-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .team-stats-controls label {
+    white-space: nowrap;
+    font-weight: 600;
+    color: #1f4f82;
+  }
+  .team-stats-controls input,
+  .team-stats-controls button {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border: 2px solid #ccc;
+    border-radius: 6px;
+    background: #fff;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+  }
+  .team-stats-controls input:focus,
+  .team-stats-controls button:hover {
+    background: #f0f8ff;
+    transform: translateY(-2px);
+  }
+  
+  /*-----------------------------------
+    Custom dropdown (unchanged)
+  -----------------------------------*/
+  .custom-dropdown {
+    position: relative;
+    min-width: 160px;
+  }
+  .custom-dropdown .dropdown-toggle {
+    width: 100%;
+    text-align: left;
+    padding: 0.5rem 1rem;
+    border: 2px solid #ccc;
+    border-radius: 6px;
+    background: #fff;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .custom-dropdown .dropdown-toggle:hover {
+    background: #f0f8ff;
+  }
+  .custom-dropdown .dropdown-toggle:after {
+    content: "▾";
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  .custom-dropdown .dropdown-menu {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    background: #fff;
+    border: 2px solid #ccc;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    z-index: 10;
+    display: none;
+  }
+  .custom-dropdown.open .dropdown-menu {
+    display: block;
+  }
+  .custom-dropdown .dropdown-menu label {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+    cursor: pointer;
+  }
+  .custom-dropdown .dropdown-menu label:hover {
+    background: #eef6ff;
+  }
+  .custom-dropdown .dropdown-menu input {
+    margin-right: 0.5rem;
+  }
+  
+  /*-----------------------------------
+    2×2 Grid “Canvas”
+  -----------------------------------*/
+  .team-stats-result {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    grid-template-areas:
+      "winloss   right"
+      "chases    defenses";
+    gap: 1.5rem;
+    /* ↑↑↑ bumped from 600px to 800px to give tables room ↑↑↑ */
+    height: 800px;
+  }
+  
+  /* area assignments */
+  #winloss-chart   { grid-area: winloss; }
+  #right-charts    { 
+    grid-area: right;
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    gap: 1rem;
+  }
+  #top5-batters-chart { }
+  #top5-bowlers-chart { }
+  #chases-table       { grid-area: chases; overflow: visible; }
+  #defenses-table     { grid-area: defenses; overflow: visible; }
+  
+  /*-----------------------------------
+    Chart Containers (unchanged)
+  -----------------------------------*/
+  .chart-area {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+  
+  /*-----------------------------------
+    Table Styling (unchanged)
+  -----------------------------------*/
+  .table-area,
+  .stats-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 2px solid #4C79A7;
+    border-radius: 6px;
+    overflow: visible; /* ensure full display */
+  }
+  .stats-table th,
+  .table-area th {
+    background: #4C79A7;
+    color: white;
+    font-weight: 600;
+    padding: 0.75rem 1rem;
+    text-align: left;
+  }
+  .stats-table td,
+  .table-area td {
+    padding: 0.6rem 1rem;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  .stats-table tr:nth-child(even),
+  .table-area tr:nth-child(even) {
+    background: #f7faff;
+  }
+  .stats-table tr:hover,
+  .table-area tr:hover {
+    background: #e6f0fa;
+    transition: background 0.2s;
+  }
+  
+  /*-----------------------------------
+    Captions for bottom tables
+  -----------------------------------*/
+  #chases-table::before {
+    content: "🏃‍♂️ Top 5 Successful Chases";
+    display: block;
+    font-size: 1.1rem;
+    color: #1f4f82;
+    margin-bottom: 0.5rem;
+  }
+  #defenses-table::before {
+    content: "🛡️ Top 5 Defenses";
+    display: block;
+    font-size: 1.1rem;
+    color: #1f4f82;
+    margin-bottom: 0.5rem;
+  }
+  
+  /*-----------------------------------
+    Tooltip (unchanged)
+  -----------------------------------*/
+  .team-tooltip {
+    position: absolute;
+    pointer-events: none;
+    background: rgba(31,79,130,0.9);
+    color: white;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    display: none;
+    white-space: nowrap;
+  }
+  

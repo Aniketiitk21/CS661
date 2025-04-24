@@ -1,0 +1,41 @@
+/* home.css — only loaded by home.html via extra_css */
+
+/* 1. Hero banner */
+.home-hero {
+    position: relative;
+    background: url('/images/ipl_banner.jpg') center/cover no-repeat;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .home-hero__overlay {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 2rem;
+    border-radius: 8px;
+    max-width: 700px;
+    text-align: center;
+  }
+  .home-hero__overlay h2 {
+    color: #fff;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+  }
+  .home-hero__overlay p {
+    color: #eee;
+    font-size: 1rem;
+    line-height: 1.4;
+  }
+  
+  /* 2. Intro image below the hero */
+  .home-intro {
+    margin-top: 2rem;
+    text-align: center;
+  }
+  .home-intro__image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  
