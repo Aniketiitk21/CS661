@@ -8,50 +8,94 @@ export function drawTeamStats(containerSelector,
   container.html("");
 
   // 1) Controls row (no page heading here)
-  const ctrl = container.append("div").attr("class","team-stats-controls");
-  ctrl.append("label").attr("for","team-input").text("Team:");
-  ctrl.append("input")
-    .attr("id","team-input")
-    .attr("type","text")
-    .attr("placeholder","e.g. Mumbai Indians");
-  ctrl.append("label").attr("for","seasons-dropdown").text("Seasons:");
-  const dropdown = ctrl.append("div")
-    .attr("class","custom-dropdown")
-    .attr("id","seasons-dropdown");
-  const toggle = dropdown.append("button")
-    .attr("type","button")
-    .attr("class","dropdown-toggle")
-    .text("All");
-  const menu = dropdown.append("div")
-    .attr("class","dropdown-menu");
-  const yearsArr = Array.from({length:2024-2008+1},(_,i)=>String(2008+i));
-  ["all", ...yearsArr].forEach(y=>{
-    const lbl = menu.append("label");
-    lbl.append("input")
-      .attr("type","checkbox")
-      .attr("value",y)
-      .property("checked", y==="all");
-    lbl.append("span").text(y);
-  });
-  ctrl.append("button").attr("id","show-stats-btn").text("Show Stats");
+// 1) Controls row (with dropdowns now)
+const ctrl = container.append("div").attr("class", "team-stats-controls");
 
-  // close dropdown if click outside
-  d3.select("body").on("click", e=>{
-    if (!dropdown.node().contains(e.target))
-      dropdown.classed("open", false);
-  });
-  toggle.on("click", ()=> dropdown.classed("open", !dropdown.classed("open")));
-  menu.selectAll("input").on("change", function(){
-    const checked = menu.selectAll("input").nodes()
-      .filter(n=>n.checked).map(n=>n.value);
-    if (checked.includes("all")) {
-      toggle.text("All");
-      menu.selectAll("input").property("checked", d=>d3.select(this).node().value==="all");
-    } else {
-      toggle.text(checked.join(", "));
-      menu.select("input[value='all']").property("checked", false);
-    }
-  });
+// Team dropdown
+ctrl.append("label").attr("for", "team-dropdown").text("Team:");
+const teamDropdown = ctrl.append("div")
+  .attr("class", "custom-dropdown")
+  .attr("id", "team-dropdown");
+const teamToggle = teamDropdown.append("button")
+  .attr("type", "button")
+  .attr("class", "dropdown-toggle")
+  .text("Select Team");
+const teamMenu = teamDropdown.append("div")
+  .attr("class", "dropdown-menu");
+
+// Replace this list with your real team names
+const teamsArr = [
+  "Mumbai Indians", "Chennai Super Kings", "Royal Challengers Bangalore",
+  "Kolkata Knight Riders", "Sunrisers Hyderabad", "Delhi Capitals",
+  "Punjab Kings", "Rajasthan Royals", "Lucknow Super Giants", "Gujarat Titans"
+];
+
+teamsArr.forEach(t => {
+  const lbl = teamMenu.append("label");
+  lbl.append("input")
+    .attr("type", "radio")
+    .attr("name", "team-radio")
+    .attr("value", t);
+  lbl.append("span").text(t);
+});
+
+// Seasons dropdown
+ctrl.append("label").attr("for", "seasons-dropdown").text("Seasons:");
+const seasonDropdown = ctrl.append("div")
+  .attr("class", "custom-dropdown")
+  .attr("id", "seasons-dropdown");
+const seasonToggle = seasonDropdown.append("button")
+  .attr("type", "button")
+  .attr("class", "dropdown-toggle")
+  .text("All");
+const seasonMenu = seasonDropdown.append("div")
+  .attr("class", "dropdown-menu");
+
+const yearsArr = Array.from({ length: 2024 - 2008 + 1 }, (_, i) => String(2008 + i));
+["all", ...yearsArr].forEach(y => {
+  const lbl = seasonMenu.append("label");
+  lbl.append("input")
+    .attr("type", "checkbox")
+    .attr("value", y)
+    .property("checked", y === "all");
+  lbl.append("span").text(y);
+});
+
+ctrl.append("button").attr("id", "show-stats-btn").text("Show Stats");
+
+// Dropdown open/close logic (shared for both dropdowns)
+d3.select("body").on("click", e => {
+  if (!teamDropdown.node().contains(e.target)) teamDropdown.classed("open", false);
+  if (!seasonDropdown.node().contains(e.target)) seasonDropdown.classed("open", false);
+});
+
+teamToggle.on("click", () => teamDropdown.classed("open", !teamDropdown.classed("open")));
+seasonToggle.on("click", () => seasonDropdown.classed("open", !seasonDropdown.classed("open")));
+
+// Update team toggle button text on selection
+teamMenu.selectAll("input").on("change", function () {
+  const selected = teamMenu.selectAll("input")
+    .filter(d => d3.select(d).property("checked"))
+    .node();
+  if (selected) {
+    teamToggle.text(selected.value);
+  } else {
+    teamToggle.text("Select Team");
+  }
+});
+
+// Update season toggle text
+seasonMenu.selectAll("input").on("change", function () {
+  const checked = seasonMenu.selectAll("input").nodes()
+    .filter(n => n.checked).map(n => n.value);
+  if (checked.includes("all")) {
+    seasonToggle.text("All");
+    seasonMenu.selectAll("input").property("checked", d => d3.select(this).node().value === "all");
+  } else {
+    seasonToggle.text(checked.join(", "));
+    seasonMenu.select("input[value='all']").property("checked", false);
+  }
+});
 
   // shared tooltip
   let tooltip = d3.select("body").select(".team-tooltip");
@@ -77,7 +121,8 @@ export function drawTeamStats(containerSelector,
 
   // 3) Fetch & render
   d3.select("#show-stats-btn").on("click", async ()=> {
-    const team = d3.select("#team-input").property("value").trim();
+    const teamInput = teamMenu.selectAll("input").filter(d => d3.select(d).property("checked")).node();
+    const team = teamInput ? teamInput.value.trim() : "";
     const checked = menu.selectAll("input").nodes()
       .filter(n=>n.checked).map(n=>n.value);
     const yearsParam = checked.includes("all")
