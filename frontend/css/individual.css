@@ -1,0 +1,230 @@
+/* ================================
+   General Styling
+=================================== */
+
+#individual-module {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 1rem;
+  }
+  
+  /* ================================
+     Controls Row
+  =================================== */
+  
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+  
+  .controls label {
+    font-weight: 600;
+    color: #1f4f82;
+    white-space: nowrap;
+  }
+  
+  .controls input[type="text"],
+  .controls select,
+  .controls button {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border: 2px solid #ccc;
+    border-radius: 6px;
+    background: #fff;
+    transition: background 0.2s, transform 0.2s;
+    cursor: pointer;
+  }
+  
+  .controls input[type="text"]:focus,
+  .controls select:focus,
+  .controls button:hover {
+    background: #f0f8ff;
+    transform: translateY(-2px);
+  }
+  
+  #player-input {
+    flex: 1;
+    min-width: 200px;
+  }
+  
+  #year-select-individual {
+    min-width: 100px;
+    max-height: 150px;
+    overflow-y: auto;
+  }
+  .custom-dropdown {
+    position: relative;
+    min-width: 160px;
+  }
+  
+  .custom-dropdown .dropdown-toggle {
+    width: 100%;
+    text-align: left;
+    padding: 0.5rem 1rem;
+    border: 2px solid #ccc;
+    border-radius: 6px;
+    background: #fff;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  
+  .custom-dropdown .dropdown-toggle:hover {
+    background: #f0f8ff;
+  }
+  
+  .custom-dropdown .dropdown-toggle:after {
+    content: "▾";
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  
+  .custom-dropdown .dropdown-menu {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    background: #fff;
+    border: 2px solid #ccc;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    z-index: 10;
+    display: none;
+  }
+  
+  .custom-dropdown.open .dropdown-menu {
+    display: block;
+  }
+  
+  .custom-dropdown .dropdown-menu label {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+    cursor: pointer;
+  }
+  
+  .custom-dropdown .dropdown-menu label:hover {
+    background: #eef6ff;
+  }
+  
+  .custom-dropdown .dropdown-menu input {
+    margin-right: 0.5rem;
+  }
+  .custom-dropdown .dropdown-toggle {
+    background: #fff;
+    color: #1f4f82; /* Optional: color matching your labels */
+    font-weight: 600;
+  }
+  
+  .custom-dropdown .dropdown-menu label input {
+    accent-color: #1f4f82; /* nice blue checkboxes */
+  }
+  
+  /* ================================
+     Stats Area
+  =================================== */
+  
+  #individual-stats {
+    margin-top: 1rem;
+  }
+  
+  /* Table styling */
+  .stats-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    border: 2px solid #4C79A7;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  
+  .stats-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  .stats-table tr:nth-child(even) {
+    background-color: #f7faff;
+  }
+  
+  .stats-table tr:hover {
+    background-color: #e6f0fa;
+    transition: background 0.2s;
+  }
+  
+  /* Headings */
+  #individual-stats h3 {
+    margin-top: 2rem;
+    margin-bottom: 0.5rem;
+    color: #1f4f82;
+  }
+  
+  /* ================================
+     Chart Areas
+  =================================== */
+  
+  .chart-area {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    padding: 1rem;
+    margin-bottom: 2rem;
+    position: relative;
+  }
+  
+  /* ================================
+     Tooltip for Charts
+  =================================== */
+  
+  .tooltip {
+    position: absolute;
+    pointer-events: none;
+    background: rgba(31, 79, 130, 0.9);
+    color: white;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    display: none;
+    white-space: nowrap;
+    z-index: 10;
+  }
+  
+  /* ================================
+     Suggestions
+  =================================== */
+  
+  #individual-stats ul {
+    list-style-type: disc;
+    padding-left: 1.5rem;
+  }
+  
+  #individual-stats li {
+    margin-bottom: 0.5rem;
+    color: #1f4f82;
+  }
+  
+  #individual-stats li:hover {
+    color: #f28500;
+    cursor: pointer;
+  }
+  
+  /* ================================
+     Miscellaneous
+  =================================== */
+  
+  /* Smaller margins for mobile responsiveness */
+  @media (max-width: 768px) {
+    .controls {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    #year-select-individual {
+      width: 100%;
+    }
+  }
+  

@@ -28,23 +28,52 @@ export function drawIndividualModule() {
     .style("flex", "1");
 
   // 3b) Seasons select (still filters summary)
-  ctrl.append("label")
-    .attr("for", "year-select-individual")
-    .text("Seasons:");
-  const yearSelect = ctrl.append("select")
-    .attr("id", "year-select-individual")
-    .attr("multiple", true)
-    .attr("size", 4)
-    .style("width", "100px");
-  const years = Array.from({ length: 2024 - 2008 + 1 }, (_, i) => String(2008 + i));
-  const opts = ["all", ...years];
-  yearSelect.selectAll("option")
-    .data(opts)
-    .join("option")
-      .attr("value", d => d)
-      .property("selected", d => d === "all")
-      .text(d => d);
+  ctrl.append("label").attr("for", "seasons-dropdown").text("Seasons:");
+  const seasonDropdown = ctrl.append("div")
+    .attr("class", "custom-dropdown")
+    .attr("id", "seasons-dropdown");
+  const seasonToggle = seasonDropdown.append("button")
+    .attr("type", "button")
+    .attr("class", "dropdown-toggle")
+    .text("All");
+  const seasonMenu = seasonDropdown.append("div")
+    .attr("class", "dropdown-menu");
+  
+  const yearsArr = Array.from({ length: 2024 - 2008 + 1 }, (_, i) => String(2008 + i));
+  ["all", ...yearsArr].forEach(y => {
+    const lbl = seasonMenu.append("label");
+    lbl.append("input")
+      .attr("type", "checkbox")
+      .attr("value", y)
+      .property("checked", y === "all");
+    lbl.append("span").text(y);
+  });
+  
+  
+  // ========== Dropdown Open-Close Handling ==========
+  // Click outside closes
+  d3.select("body").on("click", e => {
+    if (!seasonDropdown.node().contains(e.target))
+      seasonDropdown.classed("open", false);
+  });
+  
+  // Open on toggle click
+  seasonToggle.on("click", () => {
+    seasonDropdown.classed("open", !seasonDropdown.classed("open"));
+  });
 
+  // When season selected, update button
+  seasonMenu.selectAll("input").on("change", function () {
+    const checked = seasonMenu.selectAll("input").nodes()
+      .filter(n => n.checked).map(n => n.value);
+    if (checked.includes("all")) {
+      seasonToggle.text("All");
+      seasonMenu.selectAll("input").property("checked", d => d3.select(this).node().value === "all");
+    } else {
+      seasonToggle.text(checked.join(", "));
+      seasonMenu.select("input[value='all']").property("checked", false);
+    }
+  });
   // 3c) Submit
   const submitBtn = ctrl.append("button")
     .attr("id", "btn-individual")
@@ -268,10 +297,14 @@ export function drawIndividualModule() {
   // 7) Fetch + display
   async function fetchAndShow() {
     const player = playerInput.property("value").trim();
-    const chosen = Array.from(yearSelect.node().selectedOptions).map(o => o.value);
-    const years   = chosen.includes("all")
-      ? "all"
-      : chosen.filter(d => d !== "all").join(",");
+    const selectedYears = seasonMenu.selectAll("input")
+    .nodes()
+    .filter(n => n.checked)
+    .map(n => n.value);
+  
+  const years = selectedYears.includes("all")
+    ? "all"
+    : selectedYears.join(",");  
 
     if (!player) {
       statsArea.html("<p>Please enter a player name.</p>");

@@ -1,4 +1,5 @@
 // frontend/js/PlayerVsPlayer.js
+import { createSeasonsDropdown } from "./seasonsDropdown.js";
 export function drawPlayerVsPlayerTable(containerSelector,
     apiEndpoint = "/api/player_vs_player") {
     const container = d3.select(containerSelector);
@@ -24,21 +25,8 @@ export function drawPlayerVsPlayerTable(containerSelector,
       .attr("type", "text")
       .attr("placeholder", "e.g. Rohit Sharma");
   
-    ctrl.append("label").text("Seasons:");
-    const yearSelect = ctrl.append("select")
-      .attr("multiple", true)
-      .attr("size", 4)
-      .style("width", "100px");
-  
-    const years = Array.from({ length: 2024 - 2008 + 1 }, (_, i) => String(2008 + i));
-    const opts = ["all", ...years];
-    yearSelect.selectAll("option")
-      .data(opts)
-      .join("option")
-        .attr("value", d => d)
-        .property("selected", d => d === "all")
-        .text(d => d);
-  
+    const seasonsHelper = createSeasonsDropdown(ctrl);
+    
     const btn = ctrl.append("button")
       .text("Compare");
   
@@ -46,37 +34,38 @@ export function drawPlayerVsPlayerTable(containerSelector,
       .attr("class", "chart-area")
       .style("margin-top", "20px");
   
-    btn.on("click", async () => {
-      const pa = aInput.property("value").trim();
-      const pb = bInput.property("value").trim();
-      const sel = Array.from(yearSelect.node().selectedOptions).map(o => o.value);
-      const yrs = sel.includes("all")
-        ? "all"
-        : sel.filter(d => d !== "all").join(",");
-  
-      if (!pa || !pb) {
-        resultArea.html("<p>Please enter both players</p>");
-        return;
-      }
-      resultArea.html("<p>Loading…</p>");
-  
-      try {
-        const res = await fetch(
-          `${apiEndpoint}?playerA=${encodeURIComponent(pa)}` +
-          `&playerB=${encodeURIComponent(pb)}&years=${yrs}`
-        );
-        const data = await res.json();
-        if (data.error) {
-          resultArea.html(`<p style="color:red">${data.error}</p>`);
-        } else {
-          renderTable(data);
+      btn.on("click", async () => {
+        const pa = aInput.property("value").trim();
+        const pb = bInput.property("value").trim();
+        const selectedYears = seasonsHelper.getSelectedSeasons();
+        const yrs = selectedYears.includes("all")
+          ? "all"
+          : selectedYears.join(",");
+      
+        if (!pa || !pb) {
+          resultArea.html("<p>Please enter both players</p>");
+          return;
         }
-      } catch (e) {
-        console.error(e);
-        resultArea.html("<p>Request failed; see console</p>");
-      }
-    });
-  
+      
+        resultArea.html("<p>Loading…</p>");
+      
+        try {
+          const res = await fetch(
+            `${apiEndpoint}?playerA=${encodeURIComponent(pa)}` +
+            `&playerB=${encodeURIComponent(pb)}&years=${yrs}`
+          );
+          const data = await res.json();
+          if (data.error) {
+            resultArea.html(`<p style="color:red">${data.error}</p>`);
+          } else {
+            renderTable(data);
+          }
+        } catch (e) {
+          console.error(e);
+          resultArea.html("<p>Request failed; see console</p>");
+        }
+      });
+      
     function renderTable(d) {
       resultArea.html("");
   

@@ -1,4 +1,5 @@
 // frontend/js/teamVsTeam.js
+import { createSeasonsDropdown } from "./seasonsDropdown.js";
 export function drawTeamVsTeam(containerSelector,
     apiEndpoint = "/api/team_vs_team") {
 const container = d3.select(containerSelector);
@@ -28,20 +29,7 @@ const bInput = ctrl.append("input")
 .attr("placeholder", "e.g. Chennai Super Kings")
 .style("flex", "1");
 
-ctrl.append("label").text("Seasons:");
-const yearSelect = ctrl.append("select")
-.attr("multiple", true)
-.attr("size", 5)
-.style("width", "120px");
-
-const years = Array.from({ length: 2024 - 2008 + 1 }, (_, i) => String(2008 + i));
-const opts = ["all", ...years];
-yearSelect.selectAll("option")
-.data(opts)
-.join("option")
-.attr("value", d => d)
-.property("selected", d => d === "all")
-.text(d => d);
+const seasonsHelper = createSeasonsDropdown(ctrl);
 
 const btn = ctrl.append("button").text("Load H2H");
 
@@ -53,10 +41,10 @@ const resultArea = container.append("div")
 btn.on("click", async () => {
 const teamA = aInput.property("value").trim();
 const teamB = bInput.property("value").trim();
-const sel   = Array.from(yearSelect.node().selectedOptions).map(o => o.value);
-const yearsParam = sel.includes("all")
-? "all"
-: sel.filter(d => d !== "all").join(",");
+const selectedYears = seasonsHelper.getSelectedSeasons();
+const yearsParam = selectedYears.includes("all")
+    ? "all"
+    : selectedYears.join(",");
 
 if (!teamA || !teamB) {
 resultArea.html("<p>Please enter both Team A and Team B.</p>");

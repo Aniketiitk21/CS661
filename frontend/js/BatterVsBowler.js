@@ -1,4 +1,5 @@
 // frontend/js/BatterVsBowler.js
+import { createSeasonsDropdown } from "./seasonsDropdown.js";
 export function drawBatterVsBowlerTable(containerSelector,
     apiEndpoint = "/api/batter_vs_bowler") {
     const container = d3.select(containerSelector);
@@ -25,20 +26,7 @@ export function drawBatterVsBowlerTable(containerSelector,
       .attr("type", "text")
       .attr("placeholder", "e.g. J Bumrah");
   
-    ctrl.append("label").text("Seasons:");
-    const yearSelect = ctrl.append("select")
-      .attr("multiple", true)
-      .attr("size", 4)
-      .style("width", "100px");
-  
-    const years = Array.from({ length: 2024 - 2008 + 1 }, (_, i) => String(2008 + i));
-    const opts = ["all", ...years];
-    yearSelect.selectAll("option")
-      .data(opts)
-      .join("option")
-        .attr("value", d => d)
-        .property("selected", d => d === "all")
-        .text(d => d);
+ const seasonsHelper = createSeasonsDropdown(ctrl);
   
     const btn = ctrl.append("button")
       .text("Show");
@@ -52,9 +40,10 @@ export function drawBatterVsBowlerTable(containerSelector,
     btn.on("click", async () => {
       const batter = batterInput.property("value").trim();
       const bowler = bowlerInput.property("value").trim();
-      const sel = Array.from(yearSelect.node().selectedOptions).map(o => o.value);
-      const yearsParam = sel.includes("all") ? "all" : sel.filter(d => d !== "all").join(",");
-  
+      const selectedYears = seasonsHelper.getSelectedSeasons();
+      const yearsParam = selectedYears.includes("all")
+          ? "all"
+          : selectedYears.join(",");
       if (!batter || !bowler) {
         resultArea.html("<p>Please enter both names.</p>");
         return;
