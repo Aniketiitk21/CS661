@@ -311,3 +311,58 @@ body {
   }
   /* sidebar stays visible */
 }
+/*──────────────────────────────────────────────────────────
+  2025-04 facelift — KEEP THIS AT THE BOTTOM
+──────────────────────────────────────────────────────────*/
+body{
+  font-family:'Inter','Segoe UI',Tahoma,sans-serif;
+}
+
+/* Sidebar gradient + active link */
+.site-sidebar{
+  width:var(--sidebar-width);
+  background:linear-gradient(180deg,var(--brand-blue) 0%,#19376d 100%);
+  padding:1rem;
+}
+.site-sidebar .nav-link.active{
+  background:rgba(255,255,255,.20);
+  font-weight:600;
+}
+
+/* ── Hero banner ───────────────────────────────────────── */
+.home-hero{
+  position:relative;
+  background:url('../images/stadium.jpg') center/cover no-repeat;
+  height:320px;
+  border-radius:12px;
+  box-shadow:0 4px 12px rgba(0,0,0,.15);
+  margin-bottom:2rem;
+}
+.home-hero__overlay{
+  position:absolute;inset:0;
+  background:rgba(11,36,71,.55);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;color:#fff;padding:1.5rem;
+}
+.home-hero__overlay h2{font-size:2rem;font-weight:700;margin-bottom:.75rem;}
+
+/* ── Stat KPI cards ─────────────────────────────────────── */
+.stat-cards{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:1rem;
+}
+.stat-card{
+  background:#fff;border-radius:8px;padding:1rem;
+  text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.05);
+}
+.stat-card i{font-size:1.6rem;color:var(--brand-blue);}
+.stat-card h3{margin:.4rem 0 0;font-size:1.6rem;font-weight:700;}
+.stat-card span{font-size:.9rem;color:var(--brand-dark);}
+/* ── Fancy bar charts ─────────────────────────── */
+.chart-area svg text.value-label { font-weight:600; fill:#333; }
+.chart-area svg text.chart-title{ font-size:1.1rem; font-weight:600; fill:#1f4f82; }
+.chart-area svg .bar:hover       { opacity:.85; cursor:pointer; }
+.chart-area svg .axis text       { font-size:.75rem; }
+.chart-area svg .grid line       { stroke:#cbd5e1; stroke-opacity:.35; }

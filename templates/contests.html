@@ -1,15 +1,22 @@
 {% extends "base.html" %}
-
 {% block title %}Head-to-Head Contests{% endblock %}
-
 {% block page_title %}Head-to-Head Contests{% endblock %}
 
 {% block content %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/individual.css') }}" />
-  <div class="dashboard">
-    <div id="chart-batter-vs-bowler" class="dashboard-item"></div>
-    <div id="chart-player-vs-player" class="dashboard-item"></div>
-    <div id="chart-team-comparison"  class="dashboard-item"></div>
-    <div id="chart-team-vs-team"     class="dashboard-item"></div>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/individual.css') }}"/>
+
+  <div class="row g-4">
+    {% for cid in [
+      'chart-batter-vs-bowler', 'chart-player-vs-player',
+      'chart-team-comparison',  'chart-team-vs-team'
+    ] %}
+      <div class="col-12 col-lg-6">
+        <div class="card shadow-sm h-100">
+          <div class="card-body p-3">
+            <div id="{{ cid }}" style="min-height:380px;"></div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
   </div>
 {% endblock %}

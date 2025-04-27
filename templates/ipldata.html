@@ -1,29 +1,34 @@
 {% extends "base.html" %}
-
 {% block title %}Overall Stats{% endblock %}
 {% block page_title %}Overall Stats{% endblock %}
 
 {% block content %}
-  <div class="global-controls" style="margin-bottom:1.5rem; display:flex; align-items:center; gap:0.5rem;">
-    <label for="global-season-select" style="font-weight:500;">Seasons:</label>
-    <select id="global-season-select" multiple style="min-width:160px;">
+  <!-- ― Global filters ― -->
+  <div class="d-flex align-items-center gap-2 mb-4">
+    <label for="global-season-select" class="fw-semibold mb-0">Seasons:</label>
+    <select id="global-season-select" class="form-select" multiple style="max-width:180px;">
       <option value="all" selected>All</option>
       {% for y in range(2008, 2025) %}
         <option value="{{ y }}">{{ y }}</option>
       {% endfor %}
     </select>
-    <button id="global-apply-btn" style="padding:0.5rem 1rem; font-size:1rem; border-radius:4px; cursor:pointer;">
-      Apply
-    </button>
+    <button id="global-apply-btn" class="btn btn-primary btn-sm">Apply</button>
   </div>
 
-  <div class="dashboard">
-    <div id="chart-top-batsmen"      class="dashboard-item"></div>
-    <div id="chart-top-bowlers"      class="dashboard-item"></div>
-    <div id="chart-top-fielders"     class="dashboard-item"></div>
-    <div id="chart-team-wins"        class="dashboard-item"></div>
-    <div id="chart-wordcloud-mvp"    class="dashboard-item"></div>
-    <div id="chart-team-winners-pie" class="dashboard-item"></div>
+  <!-- ― Chart grid ― -->
+  <div class="row g-4">
+    {% for cid in [
+      'chart-top-batsmen',      'chart-top-bowlers',
+      'chart-top-fielders',     'chart-team-wins',
+      'chart-wordcloud-mvp',    'chart-team-winners-pie'
+    ] %}
+      <div class="col-12 col-lg-6">
+        <div class="card shadow-sm h-100">
+          <div class="card-body p-3">
+            <div id="{{ cid }}" style="min-height:380px;"></div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
   </div>
-
-  {% endblock %}
+{% endblock %}
