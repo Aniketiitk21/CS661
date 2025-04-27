@@ -5,11 +5,9 @@ export function drawTeamWinnersPie(
 ) {
   const container = d3.select(containerSelector);
   container.html("");
-
   container
     .append("h2")
-    .text("All-Time IPL Champions")
-    .style("margin-bottom", "10px");
+    .text("🏆 All-Time IPL Champions") 
 
   const chartArea = container
     .append("div")
@@ -40,7 +38,7 @@ export function drawTeamWinnersPie(
     "Delhi Capitals": "DC",
     "Gujarat Titans": "GT",
     "Lucknow Super Giants": "LSG",
-    "Deccan Chargers": "DC (old)",
+    "Deccan Chargers": "DC",
     "Gujarat Lions": "GL",
     "Rising Pune Supergiant": "RPSG",
     "Pune Warriors": "PW",
@@ -79,8 +77,8 @@ export function drawTeamWinnersPie(
       return;
     }
 
-    const W = 400,
-      H = 400,
+    const W = 65,
+      H = 35,
       R = Math.min(W, H) / 2;
 
     const svg = chartArea
@@ -94,7 +92,7 @@ export function drawTeamWinnersPie(
       .domain(data.map(d => d.team));
 
     const pie = d3.pie().value(d => d.titles).sort(null);
-    const arc = d3.arc().innerRadius(0).outerRadius(R - 10);
+    const arc = d3.arc().innerRadius(0).outerRadius(R);
 
     const arcs = svg
       .selectAll("g.arc")
@@ -129,7 +127,7 @@ export function drawTeamWinnersPie(
       .attr("transform", d => `translate(${arc.centroid(d)})`)
       .attr("text-anchor", "middle")
       .attr("dy", "0.35em")
-      .style("font-size", "11px")
+      .style("font-size", "1px")
       .style("fill", "#000")
       .text(d => SHORT[d.data.team] ?? d.data.team);
   }

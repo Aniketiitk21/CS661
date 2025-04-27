@@ -2,7 +2,9 @@
 export function drawTopBatsmenChart(containerSelector, apiEndpoint = "/api/top_batsmen") {
   const container = d3.select(containerSelector);
   container.html("");  
-
+  container.append("h4")
+    .text("🏏 Top 10 Batsmen")
+    .style("margin-bottom", "10px");
   // table area
   const tableArea = container.append("div")
     .attr("class", "table-area");
