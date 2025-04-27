@@ -1,41 +1,83 @@
-/* home.css — only loaded by home.html via extra_css */
+/* home.css — only loaded by home.html via extra_css *
 
 /* 1. Hero banner */
 .home-hero {
-    position: relative;
-    background: url('/images/ipl_banner.jpg') center/cover no-repeat;
-    height: 300px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  position: relative;
+  background: url('/images/ipl_banner.jpg') center/cover no-repeat;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+.home-hero__overlay {
+  background: rgba(0, 0, 0, 0.65);
+  padding: 2rem;
+  border-radius: 8px;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+}
+.home-hero__overlay p {
+  color: #e0e0e0;
+  font-size: 1.15rem;
+  font-style: italic;
+  line-height: 1.6;
+  margin-bottom: 1.25rem;
+}
+
+/* 2. Stat-cards container */
+.stat-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  margin: 2rem 0;
+}
+.stat-cards--bottom {
+  margin-top: 2rem;
+}
+
+/* 3. Stat-card styling */
+.stat-card {
+  background: linear-gradient(135deg, #ffffff, #f4f8fc);
+  border-left: 5px solid #4C79A7;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  padding: 1.5rem 1rem;
+  text-align: center;
+  flex: 1 1 200px;
+  max-width: 250px;
+  transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+}
+.stat-card:hover {
+  transform: translateY(-6px);
+  border-color: #1f4f82;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+}
+.stat-card i {
+  font-size: 2.2rem;
+  color: #1f4f82;
+  margin-bottom: 0.5rem;
+}
+.stat-card h3 {
+  font-size: 1.85rem;
+  margin: 0.25rem 0;
+  color: #0f1f3a;
+}
+.stat-card span {
+  display: block;
+  color: #555;
+  font-size: 0.95rem;
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .stat-cards {
+    justify-content: space-around;
   }
-  .home-hero__overlay {
-    background: rgba(0, 0, 0, 0.5);
-    padding: 2rem;
-    border-radius: 8px;
-    max-width: 700px;
-    text-align: center;
+  .stat-card {
+    flex: 1 1 45%;
+    max-width: none;
   }
-  .home-hero__overlay h2 {
-    color: #fff;
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
-  }
-  .home-hero__overlay p {
-    color: #eee;
-    font-size: 1rem;
-    line-height: 1.4;
-  }
-  
-  /* 2. Intro image below the hero */
-  .home-intro {
-    margin-top: 2rem;
-    text-align: center;
-  }
-  .home-intro__image {
-    max-width: 100%;
-    height: auto;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  }
-  
+}

@@ -4,13 +4,17 @@
 {% block page_title %}Welcome to the IPL Dashboard{% endblock %}
 
 {% block content %}
+  {# pull in home.css just like you did for individual.css #}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}"/>
+
   <!-- Hero -->
   <section class="home-hero">
     <div class="home-hero__overlay">
-      <h2>IPL Analytics Dashboard</h2>
       <p class="lead mb-2">
-        Dive into the world’s premier T20 league—track the greats, compare rivalries
-        and test our win‑prediction engine.
+        The Indian Premier League (IPL) is the world’s most-watched Twenty20 cricket tournament, pitting franchise teams from across India in a high-octane battle every season.
+      </p>
+      <p class="lead mb-2">
+        This interactive dashboard delivers comprehensive IPL analytics—track cumulative career milestones, explore season-wise stats, compare teams, and harness our win-prediction engine.
       </p>
       <a href="{{ url_for('ipldata') }}" class="btn btn-warning fw-semibold">
         <i class="fa-solid fa-chart-line me-1"></i> Explore Stats
@@ -18,30 +22,51 @@
     </div>
   </section>
 
-  <!-- Live KPIs -->
+  <!-- Top KPI Row -->
   <section class="stat-cards">
     <div class="stat-card">
       <i class="fa-solid fa-baseball-ball"></i>
       <h3>{{ total_runs }}</h3>
       <span>Total Runs</span>
     </div>
-
     <div class="stat-card">
       <i class="fa-solid fa-gauge-high"></i>
       <h3>{{ avg_run_rate }}</h3>
-      <span>Avg Run‑rate</span>
+      <span>Avg Run-rate</span>
     </div>
-
     <div class="stat-card">
       <i class="fa-solid fa-fire-flame-curved"></i>
       <h3>{{ total_wickets }}</h3>
       <span>Total Wickets</span>
     </div>
-
     <div class="stat-card">
-      <i class="fa-solid fa-calendar-week"></i>
-      <h3>{{ matches_per_season }}</h3>
-      <span>Matches / Season</span>
+      <i class="fa-solid fa-hourglass-half"></i>
+      <h3>{{ overs_bowled }}</h3>
+      <span>Overs Bowled</span>
+    </div>
+  </section>
+
+  <!-- Bottom KPI Row -->
+  <section class="stat-cards stat-cards--bottom">
+    <div class="stat-card">
+      <i class="fa-solid fa-list-ol"></i>
+      <h3>{{ total_matches }}</h3>
+      <span>Total Matches</span>
+    </div>
+    <div class="stat-card">
+      <i class="fa-solid fa-calendar-days"></i>
+      <h3>{{ season_count }}</h3>
+      <span>Seasons</span>
+    </div>
+    <div class="stat-card">
+      <i class="fa-solid fa-user-group"></i>
+      <h3>{{ unique_players }}</h3>
+      <span>Unique Players</span>
+    </div>
+    <div class="stat-card">
+      <i class="fa-solid fa-trophy"></i>
+      <h3>{{ unique_winners }}</h3>
+      <span>Unique Champions</span>
     </div>
   </section>
 {% endblock %}

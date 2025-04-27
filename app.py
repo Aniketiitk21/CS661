@@ -1,4 +1,3 @@
-# app.py ────────────────────────────────────────────────────────────────
 import os
 from datetime import datetime
 from functools import lru_cache
@@ -7,7 +6,6 @@ import pandas as pd
 from flask import Flask, render_template, request, jsonify
 
 from pointValue import compute_top25_players
-
 
 # ── 1. Load match & delivery data once ─────────────────────────────────
 BASE = os.path.dirname(os.path.abspath(__file__))
@@ -24,16 +22,46 @@ def inject_now():
 
 # ── 3. KPI helper for the Home page ───────────────────────────────────
 def compute_kpis(matches_df, deliveries_df):
-    total_runs   = deliveries_df["total_runs"].sum()
+    # total runs
+    total_runs = deliveries_df["total_runs"].sum()
+    # avg run rate = total_runs / (total_deliveries/6)
     avg_run_rate = total_runs / (len(deliveries_df) / 6)
-    total_wkts   = deliveries_df["player_dismissed"].notna().sum()
-    matches_per_season = matches_df.groupby("season").size().mean()
+    # total wickets
+    total_wkts = deliveries_df["player_dismissed"].notna().sum()
+
+    # total matches
+    total_matches = len(matches_df)
+
+    # number of seasons
+    # matches.csv already has 'season' column
+    season_count = matches_df["season"].nunique()
+
+    # unique champions (count of distinct winners of the final match of each season)
+    final_per_season = (
+        matches_df
+        .sort_values(["season", "date"])
+        .groupby("season", as_index=False)
+        .last()
+    )
+    unique_winners = final_per_season["winner"].nunique()
+
+    # overs bowled = total deliveries /6
+    overs_bowled = len(deliveries_df) / 6
+
+    # unique players = union of batters and bowlers
+    batters = set(deliveries_df["batter"].dropna().unique())
+    bowlers = set(deliveries_df["bowler"].dropna().unique())
+    unique_players = len(batters.union(bowlers))
 
     return dict(
         total_runs         = f"{total_runs:,}",
         avg_run_rate       = f"{avg_run_rate:.2f}",
         total_wickets      = f"{total_wkts:,}",
-        matches_per_season = f"{matches_per_season:.0f}",
+        total_matches      = f"{total_matches:,}",
+        season_count       = f"{season_count:,}",
+        unique_winners     = f"{unique_winners:,}",
+        overs_bowled       = f"{overs_bowled:.0f}",
+        unique_players     = f"{unique_players:,}",
     )
 
 
@@ -67,7 +95,7 @@ register_wordcloud_routes(app, matches, deliveries)
 register_season_stats(app, matches, deliveries)
 
 
-# ── 6. Jinja page routes (ONE copy only!) ─────────────────────────────
+# ── 6. Jinja page routes ──────────────────────────────────────────────
 @app.route("/")
 def home():
     return render_template("home.html", **compute_kpis(matches, deliveries))
@@ -109,5 +137,4 @@ def api_wordcloud():
 
 # ── 8. Run the server ─────────────────────────────────────────────────
 if __name__ == "__main__":
-    # In production: debug=False  (or use `flask run --no-reload`)
     app.run(debug=True)
