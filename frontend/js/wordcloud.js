@@ -4,21 +4,21 @@ export function drawWordCloud(containerSelector, apiEndpoint = "/api/wordcloud")
     container.html("");
   
     container.append("h2")
-      .text("Top 25 Most Valuable Players")
-      .style("margin-bottom","10px");
+      .text("🌟 Top 25 Most Valuable Players")
+      .style("margin-bottom","20px");
   
     const chartArea = container.append("div")
       .attr("class","chart-area")
       .style("position","relative")
       .style("width","100%")
-      .style("height","600px");
+      .style("height","250px");
   
     const tooltip = chartArea.append("div")
       .attr("class","tooltip")
       .style("position","absolute")
       .style("pointer-events","none")
       .style("display","none")
-      .style("padding","6px")
+      .style("padding","2px")
       .style("background","rgba(0,0,0,0.7)")
       .style("color","#fff")
       .style("border-radius","4px")
@@ -69,41 +69,73 @@ export function drawWordCloud(containerSelector, apiEndpoint = "/api/wordcloud")
   
     function render(words) {
       const width  = chartArea.node().clientWidth;
-      const height = 600;
-  
+      const height = chartArea.node().clientHeight;
+    
+      // 1) derive a size scale (sizes in your data → [14px .. 60px])
+      const sizeExtent = d3.extent(words, d => d.size);
+      const sizeScale  = d3.scaleLinear()
+        .domain(sizeExtent)
+        .range([14, 50]);  // min 14px, max 60px
+    
+      // 2) a color scale
+      const colorScale = d3.scaleSequential()
+      .domain(sizeExtent.reverse())         // largest→first, so they get the warmest tone
+      .interpolator(d3.interpolateTurbo); // d3.interpolateRainbow); 
+    
+      // 3) layout
       const layout = d3.layout.cloud()
         .size([width, height])
-        .words(words.map(d=>({ text:d.text, size:d.size })))
-        .padding(5)
-        .rotate(0)
-        .fontSize(d=>d.size * 0.5)
-        .on("end", draw);
+        .words(words.map(d => ({ text: d.text, size: d.size })))
+        .padding(2)
+        .spiral("archimedean")            // ← switch from rectangular
+        .rotate(() => Math.random()<0.5?0:90)
+        .font("Impact")
+        .fontSize(d => sizeScale(d.size))
+        .on("end", draw)
       layout.start();
-  
+    
+    
+      // 4) draw callback
       function draw(placedWords) {
         const svg = chartArea.append("svg")
           .attr("width", width)
           .attr("height", height)
           .append("g")
             .attr("transform", `translate(${width/2},${height/2})`);
-  
-        svg.selectAll("text")
+    
+        const texts = svg.selectAll("text")
           .data(placedWords)
           .join("text")
-            .style("font-size", d=>`${d.size}px`)
-            .style("fill", ()=> d3.schemeCategory10[Math.floor(Math.random()*10)])
+            .attr("class","wtext")
+            .style("font-family","Impact")
+            .style("font-size","0px")                // start invisible
+            //.style("fill", d => colorScale(d.text))
             .attr("text-anchor","middle")
-            .attr("transform", d=>`translate(${d.x},${d.y})rotate(${d.rotate})`)
-            .text(d=>d.text)
-          .on("mouseover",(e,d)=>{
+            .attr("transform", d => 
+               `translate(${d.x},${d.y})rotate(${d.rotate})`
+            )
+            .attr("fill", d => colorScale(d.size))
+            .text(d => d.text);
+    
+        // 5) fade-in transition + grow font
+        texts.transition()
+          .duration(800)
+          .style("font-size", d => `${d.size}px`)
+          .style("opacity", 1);
+    
+        // 6) tooltip interactions
+        texts
+          .style("opacity", 0)
+          .on("mouseover", (e,d) => {
             tooltip
               .style("display","block")
-              .style("left",`${e.layerX+10}px`)
-              .style("top",`${e.layerY+10}px`)
-              .html(`<strong>${d.text}</strong><br/>Avg Pts: ${d.size.toFixed(1)}`);
+              .style("left", `${e.layerX+10}px`)
+              .style("top",  `${e.layerY+10}px`)
+              .html(`<strong>${d.text}</strong><br/>Value: ${d.size}`);
           })
-          .on("mouseout",() => tooltip.style("display","none"));
+          .on("mouseout", () => tooltip.style("display","none"));
       }
     }
+    
   }
   

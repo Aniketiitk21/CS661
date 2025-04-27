@@ -1,7 +1,9 @@
 export function drawTopBowlersChart(containerSelector, apiEndpoint = "/api/top_bowlers") {
   const container = d3.select(containerSelector);
   container.html("");
-
+  container.append("h4")
+    .text("Top 10 Bowlers")
+    .style("margin-bottom", "10px");
   const tableArea = container.append("div")
     .attr("class","table-area");
 

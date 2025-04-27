@@ -8,7 +8,7 @@ export function drawTeamWinsChart(containerSelector,
 
   // 1) Title
   container.append("h2")
-    .text("Team Wins by Season(s)")
+    .text("🏆 Team Wins by Season(s)")
     .style("margin-bottom", "10px");
 
   // 2) Chart area (for SVG + tooltip)
@@ -77,10 +77,10 @@ export function drawTeamWinsChart(containerSelector,
       wins: +d.count
     }));
 
-    const margin = { top: 40, right: 20, bottom: 60, left: 140 };
+    const margin = { top: 40, right: 20, bottom: 60, left: 180 };
     // dynamic width from container
     const fullWidth = chartArea.node().clientWidth;
-    const width = 800 - margin.left - margin.right;
+    const width = 1200 - margin.left - margin.right;
     const height = 500 - margin.top - margin.bottom;
 
     const svg = chartArea.append("svg")
