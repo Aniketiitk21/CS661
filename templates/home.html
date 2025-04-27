@@ -3,24 +3,45 @@
 {% block title %}Home – IPL Dashboard{% endblock %}
 {% block page_title %}Welcome to the IPL Dashboard{% endblock %}
 
-{% block extra_css %}
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
-{% endblock %}
-
 {% block content %}
+  <!-- Hero -->
   <section class="home-hero">
     <div class="home-hero__overlay">
-      <h2>Welcome to the IPL Analytics Dashboard</h2>
-      <p>
-        Dive into the world’s premier T20 league—track the all-time greats,
-        discover emerging stars, compare head-to-head battles, explore season
-        tables and even test our win-prediction engine. All your IPL insights
-        in one place, powered by interactive D3 visualisations.
+      <h2>IPL Analytics Dashboard</h2>
+      <p class="lead mb-2">
+        Dive into the world’s premier T20 league—track the greats, compare rivalries
+        and test our win‑prediction engine.
       </p>
+      <a href="{{ url_for('ipldata') }}" class="btn btn-warning fw-semibold">
+        <i class="fa-solid fa-chart-line me-1"></i> Explore Stats
+      </a>
     </div>
   </section>
-  <section class="home-intro">
-    <img src="{{ url_for('static', filename='images/ipl_banner.jpg') }}"
-         alt="IPL Stadium" class="home-intro__image" />
+
+  <!-- Live KPIs -->
+  <section class="stat-cards">
+    <div class="stat-card">
+      <i class="fa-solid fa-baseball-ball"></i>
+      <h3>{{ total_runs }}</h3>
+      <span>Total Runs</span>
+    </div>
+
+    <div class="stat-card">
+      <i class="fa-solid fa-gauge-high"></i>
+      <h3>{{ avg_run_rate }}</h3>
+      <span>Avg Run‑rate</span>
+    </div>
+
+    <div class="stat-card">
+      <i class="fa-solid fa-fire-flame-curved"></i>
+      <h3>{{ total_wickets }}</h3>
+      <span>Total Wickets</span>
+    </div>
+
+    <div class="stat-card">
+      <i class="fa-solid fa-calendar-week"></i>
+      <h3>{{ matches_per_season }}</h3>
+      <span>Matches / Season</span>
+    </div>
   </section>
 {% endblock %}
