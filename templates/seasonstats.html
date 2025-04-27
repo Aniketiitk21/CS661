@@ -3,13 +3,155 @@
 {% block page_title %}Season Stats{% endblock %}
 
 {% block content %}
-  <div class="row g-4">
-    <div class="col-12">
-      <div class="card shadow-sm">
-        <div class="card-body p-3">
-          <div id="chart-points-table" style="min-height:420px;"></div>
-        </div>
+<!-- ───────────────────────────────────────────────────────  TOOLBAR  ── -->
+<div class="d-flex flex-wrap align-items-center justify-content-center gap-2 mb-4">
+  <span class="fw-semibold">Season:</span>
+
+  <select id="season-select" class="form-select w-auto">
+    {% for y in range(2008, 2025) %}
+      <option value="{{ y }}" {% if y == 2024 %}selected{% endif %}>{{ y }}</option>
+    {% endfor %}
+  </select>
+
+  <button id="btn-load" class="btn btn-primary btn-sm">Show Stats</button>
+</div>
+
+<!-- ───────────────────────────────────────────────────────  KPI row  ── -->
+<div class="row g-3 mb-4 text-center" id="kpi-row">
+  {% for _ in range(4) %}
+  <div class="col-6 col-md-3">
+    <div class="card shadow-sm h-100">
+      <div class="card-body py-3">
+        <h3 class="mb-0">–</h3>
+        <small class="text-muted">Loading…</small>
       </div>
     </div>
   </div>
+  {% endfor %}
+</div>
+
+<!-- ───────────────────────────── summary cards (Orange / Purple / Winner) ── -->
+<div class="row g-3 mb-4 text-center" id="summary-cards">
+  <!-- Orange Cap -->
+  <div class="col-12 col-md-4">
+    <div class="card shadow-sm h-100 border-warning">
+      <div class="card-body py-3">
+        <h6 class="small text-muted mb-1 text-uppercase">Orange Cap</h6>
+        <h5 id="orange-cap-val" class="mb-0">–</h5>
+      </div>
+    </div>
+  </div>
+
+  <!-- Purple Cap -->
+  <div class="col-12 col-md-4">
+    <div class="card shadow-sm h-100 border-purple">
+      <div class="card-body py-3">
+        <h6 class="small text-muted mb-1 text-uppercase">Purple Cap</h6>
+        <h5 id="purple-cap-val" class="mb-0">–</h5>
+      </div>
+    </div>
+  </div>
+
+  <!-- Season Winner -->
+  <div class="col-12 col-md-4">
+    <div class="card shadow-sm h-100 border-success">
+      <div class="card-body py-3">
+        <h6 class="small text-muted mb-1 text-uppercase">Title Winner</h6>
+        <h5 id="winner-val" class="mb-0">–</h5>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ───────────────────────────── points-table + scatter plots widget ── -->
+<div class="card shadow-sm">
+  <div class="card-body p-3">
+    <div id="chart-points-table" style="min-height:420px;"></div>
+  </div>
+</div>
+
+<!-- ───────────────────────────── page-specific JS  ─────────────────── -->
+<script type="module">
+  import { drawPointsTable } from "{{ url_for('static', filename='js/pointsTable.js') }}";
+
+  const sel = document.getElementById('season-select');
+  const btn = document.getElementById('btn-load');
+  const kpi = document.getElementById('kpi-row');
+
+  async function refresh () {
+    const yr = sel.value;
+
+    /* 1 — headline KPIs ------------------------------------------------ */
+    try {
+      const s = await fetch(`/api/season_summary?years=${yr}`).then(r => r.json());
+      const stats = [
+        ['Total Sixes',        s.total_sixes],
+        ['Total Fours',        s.total_fours],
+        ['Dot Balls',          s.total_dot_balls],
+        ['Avg Innings Score',  s.avg_innings_score.toFixed(2)]
+      ];
+      kpi.querySelectorAll('.card').forEach((card, i) => {
+        card.querySelector('h3').textContent      = stats[i][1];
+        card.querySelector('small').textContent   = stats[i][0];
+      });
+    } catch (e) { console.error(e); }
+
+    /* 2 — Orange / Purple / Winner cards ------------------------------ */
+    try {
+      const [orange, purple, winner] = await Promise.all([
+        fetch(`/api/orange_cap?years=${yr}`).then(r => r.json()),
+        fetch(`/api/purple_cap?years=${yr}`).then(r => r.json()),
+        fetch(`/api/team_winners?years=${yr}`).then(r => r.json())
+      ]);
+
+      document.getElementById('orange-cap-val').textContent =
+        orange[0] ? `${orange[0].batter} (${orange[0].total_runs} runs)` : '–';
+
+      document.getElementById('purple-cap-val').textContent =
+        purple[0] ? `${purple[0].bowler} (${purple[0].wickets} wkts)`     : '–';
+
+      document.getElementById('winner-val').textContent =
+        winner[0] ? winner[0].team : '–';
+    } catch (e) { console.error(e); }
+
+    /* 3 — big widget (points + scatter) ------------------------------- */
+    drawPointsTable('#chart-points-table');
+
+    /*   hide the widget’s own selector & show chosen season             */
+    setTimeout(() => {
+      const yearSel = document.getElementById('points-year-select');
+      if (yearSel) {
+        yearSel.value = yr;
+        yearSel.parentElement.querySelector('button')?.click();
+      }
+      /* wider gap between the two scatter charts */
+      const flexRow = document.querySelector(
+        '#chart-points-table div[style*="display:flex"]'
+      );
+      if (flexRow) flexRow.style.gap = '40px';
+    }, 300);
+  }
+
+  btn.addEventListener('click', refresh);
+  refresh();      // initial paint
+</script>
+
+<!-- ───────────────────────────── tiny CSS tweaks  ──────────────────── -->
+<style>
+  /* hide the widget’s internal season-selector */
+  #chart-points-table .controls           { display: none !important; }
+
+  /* spacing around summary paragraph & scatter row */
+  #chart-points-table .season-summary     { margin-bottom: 1.5rem; }
+
+  /* coloured borders that match brand palette */
+  .border-purple  { border-top: 3px solid #8e24aa !important; }
+  .border-success { border-top: 3px solid #2e7d32 !important; }
+  .border-warning { border-top: 3px solid #f2a900 !important; }
+  /* kill the legacy line-style season summary block */
+  #chart-points-table .season-summary{
+  display:none !important;
+}
+
+</style>
 {% endblock %}
