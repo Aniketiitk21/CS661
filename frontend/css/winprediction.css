@@ -1,0 +1,313 @@
+/* win_prediction.css */
+
+/* ── VARIABLES ───────────────────────────────────────────────── */
+:root {
+    --primary: #1e88e5;    /* Vibrant Blue */
+    --secondary: #00c853;  /* Vibrant Green */
+    --primary-dark: #1565c0;
+    --secondary-dark: #00a142;
+    --bg-light: #f4f7f6;   /* Slightly off-white page background */
+    --bg-panel: #ffffff;
+    --text-dark: #263238;  /* Darker text */
+    --text-light: #546e7a; /* Lighter text */
+    --border-color: #e0e0e0;
+    --shadow-color: rgba(0, 0, 0, 0.08); /* Softer shadow */
+    --shadow-hover: rgba(0, 0, 0, 0.15);
+    --radius: 8px;
+    --transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); /* Smoother transition */
+  }
+  
+  /* ── PAGE BACKGROUND & FONT ────────────────────────────────── */
+  body {
+    background: var(--bg-light);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    overflow-x: hidden; /* hide horizontal scrollbar if any */
+    color: var(--text-dark);
+  }
+  
+  /* Apply some overall padding if needed via the main container in base.html */
+  /* e.g., main .container { padding: 1rem; } */
+  
+  /* ── TEAM PANELS ─────────────────────────────────────────────── */
+  .team-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem; /* Increased gap */
+    margin-bottom: 2rem;
+  }
+  
+  .team-panel {
+    flex: 1;
+    min-width: 280px; /* Slightly wider minimum */
+    background: var(--bg-panel);
+    border-radius: var(--radius);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 12px var(--shadow-color);
+    padding: 1.25rem 1.5rem; /* Adjusted padding */
+    transition: transform var(--transition), box-shadow var(--transition);
+    opacity: 0;
+    transform: translateY(15px);
+    animation: panelFadeIn 0.5s ease-out forwards;
+  }
+  
+  /* Stagger panel load-in */
+  .team-panel:nth-child(1) { animation-delay: 0.1s; }
+  .team-panel:nth-child(2) { animation-delay: 0.25s; }
+  
+  .team-panel:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px var(--shadow-hover);
+  }
+  
+  .team-panel h4 {
+    margin-top: 0;
+    margin-bottom: 1rem; /* More space below heading */
+    font-size: 1.2rem; /* Slightly larger heading */
+    color: var(--text-dark);
+    font-weight: 600;
+    position: relative;
+    padding-left: 28px; /* Space for emoji */
+  }
+  
+  .team-panel h4::before {
+    content: "🏏"; /* Cricket bat emoji */
+    position: absolute;
+    left: 0;
+    top: 1px; /* Align emoji nicely */
+    font-size: 1.1em;
+  }
+  
+  /* ── INPUTS & SELECTS ─────────────────────────────────────────── */
+  .team-panel .player-row { /* Assuming JS adds this class or target the div */
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    align-items: center;
+  }
+  
+  .team-panel input[type="text"],
+  .team-panel select {
+    padding: 0.6rem 0.8rem; /* Better padding */
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background: #fdfdfd; /* Slightly off-white input bg */
+    font-size: 0.95rem;
+    color: var(--text-dark);
+    transition: box-shadow var(--transition), border-color var(--transition), background var(--transition);
+  }
+  .team-panel input[type="text"] {
+      flex: 1; /* Ensure text input takes available space */
+  }
+  .team-panel select {
+      flex-basis: 120px; /* Give select a reasonable base width */
+      flex-shrink: 0;
+  }
+  
+  .team-panel input:focus,
+  .team-panel select:focus {
+    outline: none;
+    background: #fff;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(30, 136, 229, 0.15); /* Softer focus ring */
+  }
+  
+  /* ── BUTTONS ──────────────────────────────────────────────────── */
+  .button-container {
+    display: flex;
+    justify-content: center;
+    gap: 1rem; /* Increased gap */
+    margin: 2rem 0; /* Increased margin */
+  }
+  
+  .button-container button {
+    position: relative;
+    overflow: hidden;
+    padding: 0.75rem 1.75rem; /* Larger buttons */
+    font-size: 1rem;
+    font-weight: 500;
+    border: none;
+    border-radius: 6px; /* Slightly more rounded */
+    color: #fff;
+    cursor: pointer;
+    transition: background-color var(--transition), transform 0.1s ease, box-shadow var(--transition);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow */
+  }
+  /* Specific button colors */
+  .button-container button:first-of-type { /* Submit */
+     background-color: var(--primary);
+  }
+  .button-container button:last-of-type { /* Clear */
+     background-color: var(--text-light);
+  }
+  
+  .button-container button:hover {
+    transform: translateY(-2px); /* Lift effect */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  }
+  .button-container button:first-of-type:hover {
+     background-color: var(--primary-dark);
+  }
+  .button-container button:last-of-type:hover {
+     background-color: var(--text-dark);
+  }
+  
+  .button-container button:active {
+    transform: translateY(0px); /* Press down effect */
+     box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  }
+  
+  /* Optional: Keep ripple or remove if distracting */
+  .button-container button::after {
+    content: "";
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 5px; height: 5px; /* Start smaller */
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0); /* Start scaled down */
+    transition: transform 0.4s ease-out, opacity 0.5s ease-out;
+    opacity: 0;
+  }
+  .button-container button:active::after {
+    transform: translate(-50%, -50%) scale(100); /* Scale up */
+    opacity: 1;
+    transition: 0s; /* Instant effect on click */
+  }
+  
+  /* ── RESULTS AREA & CHART ────────────────────────────────────── */
+  .chart-area { /* Used by the outer container in the original HTML */
+    margin-top: 20px;
+  }
+  
+  .results-display { /* Class added in JS */
+    background: var(--bg-panel);
+    border-radius: var(--radius);
+    border: 1px solid var(--border-color);
+    padding: 1.5rem 2rem; /* More padding */
+    box-shadow: 0 6px 16px var(--shadow-color);
+    opacity: 0;
+    transform: translateY(15px);
+    animation: panelFadeIn 0.5s 0.2s ease-out forwards; /* Fade in after panels */
+  }
+  
+  .results-title { /* Class added in JS */
+      text-align: center;
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      color: var(--text-dark);
+      position: relative;
+  }
+  .results-title::before {
+      content: "📊"; /* Chart emoji */
+      margin-right: 0.5em;
+  }
+  
+  .prob-section { /* Class added in JS */
+      margin-bottom: 1.25rem; /* Space between each bar section */
+  }
+  .prob-section:last-child {
+      margin-bottom: 0;
+  }
+  
+  .prob-title { /* Class added in JS */
+    margin: 0 0 0.6rem 0;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-dark);
+    position: relative;
+    padding-left: 24px; /* Space for emoji */
+  }
+  /* Different emojis for breakdown titles */
+  .prob-title:before { content: "⚡"; position: absolute; left: 0; top: 1px; }
+  .prob-section:nth-of-type(1) .prob-title:before { content: "🏆"; } /* Overall */
+  .prob-section:nth-of-type(2) .prob-title:before { content: "🏏"; } /* Batting */
+  .prob-section:nth-of-type(3) .prob-title:before { content: "🔥"; } /* Bowling - using flame now */
+  .prob-section:nth-of-type(4) .prob-title:before { content: "🧤"; } /* Fielding */
+  
+  
+  /* ── PROBABILITY BARS (Styled via Classes) ─────────────────── */
+  .prob-bar-container {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem; /* Increased gap */
+  }
+  
+  .prob-bar-container .label {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .prob-bar-container .label-team1 { text-align: right; flex-basis: 90px; flex-shrink: 0; }
+  .prob-bar-container .label-team2 { text-align: left; flex-basis: 90px; flex-shrink: 0; }
+  
+  .prob-bar-wrapper {
+    flex: 1; /* Take remaining space */
+    display: flex;
+    height: 16px; /* Slightly thicker bar */
+    background: #e9ecef; /* Lighter grey background */
+    border-radius: 8px; /* Rounded bar */
+    overflow: hidden; /* Important for border-radius */
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); /* Inset shadow */
+  }
+  
+  .prob-segment {
+    height: 100%;
+    transition: width 0.8s cubic-bezier(0.25, 0.8, 0.25, 1); /* Animate width changes */
+    /* Add subtle gradient */
+    background-image: linear-gradient(rgba(255,255,255,0.1), rgba(0,0,0,0.1));
+  }
+  
+  .prob-team1 {
+    background-color: var(--primary);
+    border-radius: 8px 0 0 8px; /* Round left corners */
+  }
+  
+  .prob-team2 {
+    background-color: var(--secondary);
+     border-radius: 0 8px 8px 0; /* Round right corners */
+  }
+  /* Ensure rounding only applies if segment is full/empty */
+  .prob-team1:only-child { border-radius: 8px; }
+  .prob-team2:only-child { border-radius: 8px; }
+  
+  
+  /* ── ANIMATIONS ──────────────────────────────────────────────── */
+  @keyframes panelFadeIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* ── RESPONSIVE ──────────────────────────────────────────────── */
+  @media (max-width: 768px) {
+      .team-panel {
+          min-width: calc(50% - 0.75rem); /* Adjust for 2 columns */
+      }
+      .results-display {
+          padding: 1rem 1.25rem;
+      }
+  }
+  
+  @media (max-width: 600px) {
+      .team-panel {
+          min-width: 100%; /* Stack panels */
+      }
+      .prob-bar-container {
+          flex-wrap: wrap; /* Allow labels to wrap */
+          gap: 0.25rem;
+      }
+      .prob-bar-container .label {
+          flex-basis: auto !important; /* Let labels take natural width */
+          font-size: 0.85rem;
+      }
+      .prob-bar-wrapper {
+          order: 3; /* Move bar below labels */
+          width: 100%; /* Full width */
+          margin-top: 0.25rem;
+      }
+       .prob-bar-container .label-team1 { text-align: left; }
+       .prob-bar-container .label-team2 { text-align: left; }
+  }

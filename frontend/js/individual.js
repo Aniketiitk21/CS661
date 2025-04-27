@@ -11,13 +11,17 @@ export function drawIndividualModule() {
     .style("align-items","center")
     .style("gap","10px");
 
+  // Player label + input
   ctrl.append("label").attr("for","player-input").text("Player Name:");
   const playerInput = ctrl.append("input")
     .attr("type","text")
     .attr("id","player-input")
     .attr("placeholder","Please enter full name.")
-    .style("flex","1");
+    .style("flex","1")
+    // default to Virat Kohli
+    .property("value", "Virat Kohli");
 
+  // Seasons dropdown
   ctrl.append("label").attr("for","seasons-dropdown").text("Seasons:");
   const seasonDropdown = ctrl.append("div")
     .attr("class","custom-dropdown")
@@ -39,6 +43,7 @@ export function drawIndividualModule() {
     lbl.append("span").text(y);
   });
 
+  // Close dropdown on outside click
   d3.select("body").on("click", e => {
     if (!seasonDropdown.node().contains(e.target))
       seasonDropdown.classed("open", false);
@@ -59,14 +64,17 @@ export function drawIndividualModule() {
     }
   });
 
+  // Show Stats button
   const submitBtn = ctrl.append("button")
     .attr("id","btn-individual")
     .text("Show Stats");
 
+  // Stats output area
   const statsArea = container.append("div")
     .attr("id","individual-stats")
     .style("margin-top","20px");
 
+  // Suggestion helper
   function showSuggestions(list) {
     statsArea.html("");
     statsArea.append("p").text("Did you mean:");
@@ -82,24 +90,26 @@ export function drawIndividualModule() {
         });
   }
 
+  // Render the summary cards and charts
   function showStats(obj) {
     statsArea.html("");
 
+    // Player name heading
     statsArea.append("h3").text(obj.player);
 
-    // Batting row (matches first)
+    // Batting row
     const battingCards = [
-      { label: "Matches Played", value: obj.bowling.matches_played, cls:"bat-card" },
-      { label: "Total Runs",     value: obj.batting.total_runs,     cls:"bat-card" },
-      { label: "Fours",          value: obj.batting.fours,          cls:"bat-card" },
-      { label: "Sixes",          value: obj.batting.sixes,          cls:"bat-card" },
-      { label: "Avg. Score",     value: obj.batting.average?.toFixed(2), cls:"bat-card" },
-      { label: "Strike Rate",    value: obj.batting.strike_rate?.toFixed(2), cls:"bat-card" }
+      { label: "Matches Played",  value: obj.bowling.matches_played },
+      { label: "Total Runs",      value: obj.batting.total_runs },
+      { label: "Fours",           value: obj.batting.fours },
+      { label: "Sixes",           value: obj.batting.sixes },
+      { label: "Avg. Score",      value: obj.batting.average?.toFixed(2) },
+      { label: "Strike Rate",     value: obj.batting.strike_rate?.toFixed(2) }
     ];
     const batRow = statsArea.append("div").attr("class","stat-row");
     battingCards.forEach(d=>{
       batRow.append("div")
-        .attr("class",`stat-card ${d.cls}`)
+        .attr("class","stat-card bat-card")
         .html(`
           <div class="stat-value">${d.value ?? "—"}</div>
           <div class="stat-label">${d.label}</div>
@@ -108,25 +118,25 @@ export function drawIndividualModule() {
 
     // Bowling row
     const bowlingCards = [
-      { label: "Runs Conceded",     value: obj.bowling.runs_conceded,     cls:"bowl-card" },
-      { label: "Overs Bowled",      value: obj.bowling.overs?.toFixed(1),  cls:"bowl-card" },
-      { label: "Wickets",           value: obj.bowling.wickets,           cls:"bowl-card" },
-      { label: "Economy Rate",      value: obj.bowling.economy?.toFixed(2),cls:"bowl-card" },
-      { label: "3-Wkt Hauls",       value: obj.bowling.three_wicket_hauls, cls:"bowl-card" },
-      { label: "5-Wkt Hauls",       value: obj.bowling.five_wicket_hauls,  cls:"bowl-card" },
-      { label: "Fielding Attempts", value: obj.fielding.fielding_attempts, cls:"bowl-card" }
+      { label: "Runs Conceded",    value: obj.bowling.runs_conceded },
+      { label: "Overs Bowled",     value: obj.bowling.overs?.toFixed(1) },
+      { label: "Wickets",          value: obj.bowling.wickets },
+      { label: "Economy Rate",     value: obj.bowling.economy?.toFixed(2) },
+      { label: "3-Wkt Hauls",      value: obj.bowling.three_wicket_hauls },
+      { label: "5-Wkt Hauls",      value: obj.bowling.five_wicket_hauls },
+      { label: "Fielding Attempts",value: obj.fielding.fielding_attempts }
     ];
     const bowlRow = statsArea.append("div").attr("class","stat-row");
     bowlingCards.forEach(d=>{
       bowlRow.append("div")
-        .attr("class",`stat-card ${d.cls}`)
+        .attr("class","stat-card bowl-card")
         .html(`
           <div class="stat-value">${d.value ?? "—"}</div>
           <div class="stat-label">${d.label}</div>
         `);
     });
 
-    // Line chart helper with hover-labels
+    // Line-chart helper
     function drawLine(data, xKey, yKey, yLabel, color) {
       const holder = statsArea.append("div")
         .attr("class","chart-area")
@@ -195,17 +205,8 @@ export function drawIndividualModule() {
           .attr("r",4)
           .attr("fill",color)
         .on("mouseover",(e,d)=>{
-          // enlarge
-          d3.select(e.currentTarget)
-            .transition().duration(100)
-            .attr("r",6);
-
-          // tooltip
           tip.style("display","block")
              .html(`${xKey}: ${d[xKey]}<br>${yLabel}: ${d[yKey]}`);
-
-          // hover-label
-          svg.selectAll(".hover-label").remove();
           svg.append("text")
             .attr("class","hover-label")
             .attr("x", x(d[xKey]))
@@ -220,22 +221,18 @@ export function drawIndividualModule() {
           tip.style("left", (e.layerX+10)+"px")
              .style("top",  (e.layerY+10)+"px");
         })
-        .on("mouseout",(e)=>{
-          // shrink
-          d3.select(e.currentTarget)
-            .transition().duration(100)
-            .attr("r",4);
-
+        .on("mouseout",()=>{
           tip.style("display","none");
           svg.selectAll(".hover-label").remove();
         });
     }
 
-    // Draw charts
+    // Draw batting charts
     if (obj.batting.average > 10) {
       drawLine(obj.batting_season,"season","runs","Runs","#1f77b4");
       drawLine(obj.batting_season,"season","strike_rate","Strike Rate","#2ca02c");
     }
+    // Draw bowling charts
     const wpM = obj.bowling.matches_played
       ? obj.bowling.wickets / obj.bowling.matches_played
       : 0;
@@ -245,6 +242,7 @@ export function drawIndividualModule() {
     }
   }
 
+  // Fetch & display
   async function fetchAndShow() {
     const player = playerInput.property("value").trim();
     const selected = seasonMenu.selectAll("input").nodes()
@@ -275,5 +273,7 @@ export function drawIndividualModule() {
     }
   }
 
+  // Hook up & initial load
   submitBtn.on("click", fetchAndShow);
+  fetchAndShow();
 }

@@ -1,0 +1,132 @@
+/* ipldata.css */
+
+/* ── GLOBAL RESET & BASE ───────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: #f5f7fa;
+  color: #333;
+}
+
+/* ── CARD LAYOUT ───────────────────────────────────────────── */
+.card {
+  border: none;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  overflow: hidden;
+}
+.card .card-body {
+  padding: 1rem;
+}
+
+/* ── CHART AREAS ───────────────────────────────────────────── */
+.chart-area,
+#chart-top-batsmen,
+#chart-top-bowlers,
+#chart-top-fielders,
+#chart-wordcloud-mvp,
+#chart-team-winners-pie,
+#chart-team-wins {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+/* ensure the first‐row charts fill their card height */
+.row > .col-12.col-lg-4 > .card {
+  height: 100%;
+}
+.row.g-4.mb-4 > .col-12.col-lg-4 .card {
+  display: flex;
+  flex-direction: column;
+}
+.row.g-4.mb-4 > .col-12.col-lg-4 .card-body {
+  flex: 1;
+  display: flex;
+}
+.row.g-4.mb-4 > .col-12.col-lg-4 .card-body > div {
+  flex: 1;
+}
+
+/* ── SMALL CHART CARDS ─────────────────────────────────────── */
+.small-chart-card {
+  height: 320px;
+}
+.small-chart-card .card-body {
+  padding: 0.75rem;
+}
+
+/* ── THIRD ROW CHART ───────────────────────────────────────── */
+#chart-team-wins {
+  min-height: 300px;
+}
+
+/* ── TABLE AREA (if used) ──────────────────────────────────── */
+.table-area,
+.stats-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.5rem;
+}
+.stats-table th,
+.table-area th {
+  background: #1f4f82;
+  color: #fff;
+  font-weight: 600;
+  padding: 0.75rem 1rem;
+  text-align: left;
+}
+.stats-table td,
+.table-area td {
+  padding: 0.6rem 1rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+.stats-table tr:nth-child(even),
+.table-area tr:nth-child(even) {
+  background: #f7faff;
+}
+.stats-table tr:hover,
+.table-area tr:hover {
+  background: #e6f0fa;
+  transition: background 0.2s;
+}
+
+/* ── RESPONSIVE TWEAKS ─────────────────────────────────────── */
+@media (max-width: 992px) {
+  .small-chart-card {
+    height: 260px;
+  }
+  #chart-team-wins {
+    min-height: 250px;
+  }
+}
+
+/* ── OPTIONAL: Tooltip styling if your charts use one ─────── */
+.tooltip {
+  position: absolute;
+  pointer-events: none;
+  background: rgba(31, 79, 130, 0.9);
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  z-index: 9999;
+}
+/*──────────────────────────────────────────────────────────
+  Clamp any overflow from charts (esp. word-cloud) 
+  and prevent horizontal page scrolling
+──────────────────────────────────────────────────────────*/
+html, body {
+  overflow-x: hidden;  /* no horizontal scrollbar ever */
+}
+
+.chart-area {
+  overflow: hidden !important;  /* clip anything inside chart containers */
+}

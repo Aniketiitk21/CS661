@@ -58,6 +58,12 @@ export function drawTeamStats(containerSelector,
       .text(t.code);
   });
 
+  // Default to first team (Mumbai Indians)
+  const defaultTeam = teamsArr[0];
+  teamMenu.select(`input[value="${defaultTeam.name}"]`)
+    .property("checked", true);
+  teamToggle.text(defaultTeam.code);
+
   // 2) Season Dropdown
   ctrl.append("label")
     .attr("for", "seasons-dropdown")
@@ -177,7 +183,6 @@ export function drawTeamStats(containerSelector,
         ? await ovRes.json()
         : null;
 
-      // clear & draw
       winlossArea.html("");
       drawWinLossChart(winlossArea, statsData.stats);
 
@@ -217,10 +222,11 @@ export function drawTeamStats(containerSelector,
       console.error(err);
       winlossArea.html(`<p style="color:red">${err.message}</p>`);
     }
-  }).dispatch("click");
+  })
+  // dispatch click once so default MI loads immediately
+  .dispatch("click");
 
   // ——————————————————————————
-  // Win/Loss grouped bar
   function drawWinLossChart(container,data){
     container.append("h3")
       .text("📊 Wins vs Losses")
@@ -298,7 +304,6 @@ export function drawTeamStats(containerSelector,
   }
 
   // ——————————————————————————
-  // Horizontal bars
   function drawHorizontalBarChart(container,data,labelKey,valueKey,title){
     container.append("h3")
       .text(title)
@@ -351,7 +356,6 @@ export function drawTeamStats(containerSelector,
   }
 
   // ——————————————————————————
-  // Simple two-col table
   function drawSimpleTable(container,data,headers,keys){
     const tbl = container.append("table").attr("class","stats-table");
     const thead = tbl.append("thead").append("tr");

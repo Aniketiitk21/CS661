@@ -257,7 +257,7 @@ def compute_top25_players(
         )
         .reset_index()
     )
-    per_player["avg_points"] = per_player["total_pts"] / per_player["matches"]
+    per_player["avg_points"] = (per_player["total_pts"] / per_player["matches"])*(1 + 0.006*per_player["matches"])
 
     # 7) filter players by at least half of max matches
     max_matches = per_player["matches"].max()

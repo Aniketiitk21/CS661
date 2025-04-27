@@ -3,21 +3,11 @@
 {% block page_title %}Overall Stats{% endblock %}
 
 {% block content %}
-  <!-- ― Global filters ― -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/smallcard.css') }}"/>
-  <div class="d-flex align-items-center gap-2 mb-4">
-    <label for="global-season-select" class="fw-semibold mb-0">Seasons:</label>
-    <select id="global-season-select" class="form-select" multiple style="max-width:180px;">
-      <option value="all" selected>All</option>
-      {% for y in range(2008, 2025) %}
-        <option value="{{ y }}">{{ y }}</option>
-      {% endfor %}
-    </select>
-    <button id="global-apply-btn" class="btn btn-primary btn-sm">Apply</button>
-  </div>
+  <div id="global-controls" class="d-flex align-items-center gap-2 mb-4"></div>
 
-  <!-- ― First row: Top batsmen, bowlers, fielders ― -->
   <div class="row g-4 mb-4">
+    <!-- top batsmen, bowlers, fielders cards (unchanged) -->
     <div class="col-12 col-lg-4">
       <div class="card shadow-sm h-100">
         <div class="card-body p-3">
@@ -41,27 +31,26 @@
     </div>
   </div>
 
- <!-- ― Second row: Word cloud & winners pie (smaller cards) ― -->
-<!-- ― Second row: Word cloud & winners pie ― -->
-<div class="row g-4 mb-4">
-  <div class="col-12 col-lg-6">
-    <div class="card shadow-sm small-chart-card">
-      <div class="card-body">
-        <div id="chart-wordcloud-mvp" style="height:100%;"></div>
+  <div class="row g-4 mb-4">
+    <!-- word cloud & winners pie -->
+    <div class="col-12 col-lg-6">
+      <div class="card shadow-sm small-chart-card">
+        <div class="card-body">
+          <div id="chart-wordcloud-mvp" style="height:100%;"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-lg-6">
+      <div class="card shadow-sm small-chart-card">
+        <div class="card-body">
+          <div id="chart-team-winners-pie" style="height:100%;"></div>
+        </div>
       </div>
     </div>
   </div>
-  <div class="col-12 col-lg-6">
-    <div class="card shadow-sm small-chart-card">
-      <div class="card-body">
-        <div id="chart-team-winners-pie" style="height:100%;"></div>
-      </div>
-    </div>
-  </div>
-</div>
 
-  <!-- ― Third row: Word cloud ― -->
   <div class="row">
+    <!-- team wins line chart -->
     <div class="col-12">
       <div class="card shadow-sm">
         <div class="card-body p-3">
@@ -70,4 +59,15 @@
       </div>
     </div>
   </div>
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  <script type="module" src="{{ url_for('static', filename='js/seasonsDropdown.js') }}"></script>
+  <script type="module" src="{{ url_for('static', filename='js/ipldata.js') }}"></script>
+  <script type="module" src="{{ url_for('static', filename='js/ipldata_page.js') }}"></script>
+  <script type="module">
+    import { wireIpldataPage } from "./static/js/ipldata_page.js";
+    wireIpldataPage();
+  </script>
 {% endblock %}

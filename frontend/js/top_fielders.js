@@ -2,7 +2,7 @@ export function drawTopFieldersChart(containerSelector, apiEndpoint = "/api/top_
   const container = d3.select(containerSelector);
   container.html("");
   container.append("h4")
-    .text("Top 10 Fielders")
+    .text("🧤Top 10 Fielders")
     .style("margin-bottom", "10px");
   const tableArea = container.append("div")
     .attr("class","table-area");
